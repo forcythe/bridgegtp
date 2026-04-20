@@ -3,9 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  // Standalone output packages only what's needed at runtime — much smaller
-  // and faster to boot on Render/Docker/any Node host.
-  output: 'standalone',
   images: {
     formats: ['image/avif', 'image/webp'],
   },
