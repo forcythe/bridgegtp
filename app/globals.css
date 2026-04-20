@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy: 11 44 74;
+    --color-red: 229 57 53;
+    --color-red-light: 239 83 80;
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply font-body bg-white text-navy antialiased;
+    font-feature-settings: 'kern', 'liga';
+  }
+
+  ::selection {
+    @apply bg-red text-white;
+  }
+
+  /* Headings default to heading font */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Scroll-margin so anchor links land below the sticky nav */
+  section[id], div[id] {
+    scroll-margin-top: 80px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply inline-flex items-center gap-[10px] text-[11px] font-heading font-semibold uppercase tracking-[0.18em] text-red;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply block w-6 h-[2px] bg-red;
+  }
+  .eyebrow-white {
+    @apply text-white/50;
+  }
+  .eyebrow-white::before {
+    @apply bg-white/30;
+  }
+
+  .section-title {
+    @apply font-heading font-bold text-navy leading-[1.12] tracking-[-0.02em];
+    font-size: clamp(28px, 3.5vw, 46px);
+    margin-bottom: 16px;
+  }
+
+  .section-intro {
+    @apply text-[17px] text-gray-500 leading-[1.75] max-w-[600px];
+    margin-bottom: 56px;
+  }
+
+  .btn-primary {
+    @apply bg-red text-white px-9 py-[15px] rounded font-heading font-bold text-[15px] transition-all duration-200 ease-out inline-flex items-center justify-center gap-2.5;
+  }
+  .btn-primary:hover {
+    @apply bg-red-dark -translate-y-px shadow-red-glow;
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-white/80 px-[34px] py-[13px] rounded font-heading text-[15px] inline-flex items-center gap-2.5 transition-all duration-200 ease-out;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+  }
+  .btn-ghost:hover {
+    @apply bg-white/[0.04] text-white;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .pill {
+    @apply font-heading font-semibold text-[11px] px-3 py-1 rounded-full bg-gray-100 text-navy;
+  }
+
+  /* Form controls on dark background */
+  .form-label {
+    @apply block font-heading text-[10px] font-bold uppercase tracking-[0.12em] text-white/50 mb-2;
+  }
+
+  .form-input {
+    @apply w-full font-body text-[15px] text-white bg-white/[0.04] rounded px-4 py-3.5 outline-none transition-colors duration-200;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+  }
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .form-input:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+  .form-input:focus {
+    @apply bg-white/[0.06];
+    border-color: rgb(var(--color-red));
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.18);
+  }
+  .form-select option,
+  .form-select optgroup {
+    background: #1a1a1a;
+    color: white;
+  }
+}
+
+@layer utilities {
+  .section-wrap {
+    @apply w-full;
+  }
+  .section {
+    @apply max-w-container mx-auto px-6 py-24 md:px-12 md:py-24;
+  }
+  @media (min-width: 768px) {
+    .section {
+      padding-top: 96px;
+      padding-bottom: 96px;
+    }
+  }
+  .section-tight {
+    @apply py-14 md:py-[72px];
+  }
+
+  /* Hero decorative backgrounds */
+  .hero-grid-bg {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 40px 40px;
+  }
+  .hero-glow {
+    background: radial-gradient(
+      circle,
+      rgba(229, 57, 53, 0.1) 0%,
+      transparent 65%
+    );
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 700ms ease-out, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,35 @@
+# Render Blueprint
+# Docs: https://render.com/docs/blueprint-spec
+#
+# After pushing this repo to GitHub:
+#   1. On Render → "New +" → "Blueprint"
+#   2. Connect the GitHub repo — Render reads this file automatically
+#   3. Add your custom domain (bridgegtp.com) in the service Settings tab
+
+services:
+  - type: web
+    name: bridge-gtp
+    runtime: node
+    plan: starter             # upgrade to "standard" for production traffic
+    region: frankfurt          # pick the region nearest your users
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      # If you later need env vars (analytics, form endpoint, etc.), add them here
+      # or in the Render dashboard → Environment.
+    headers:
+      # Belt-and-braces — these are already set in next.config.mjs, but Render
+      # can emit them at the edge too for any non-Next routes.
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
