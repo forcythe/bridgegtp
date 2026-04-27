@@ -3,8 +3,6 @@ import localFont from 'next/font/local';
 import { SITE_CONFIG, SITE_URL } from '@/lib/site-config';
 import './globals.css';
 
-// Local font loading via next/font/local — subset + preload automatically,
-// produces a CSS variable we can consume in Tailwind's font-family config.
 const montserrat = localFont({
   src: [
     { path: '../public/fonts/Montserrat-SemiBold.ttf', weight: '600', style: 'normal' },
@@ -30,26 +28,17 @@ const lato = localFont({
   fallback: ['system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
 });
 
-/**
- * Viewport configuration.
- * `themeColor` drives mobile browser chrome color.
- */
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0B2C4A' },
-    { media: '(prefers-color-scheme: dark)', color: '#0B2C4A' },
+    { media: '(prefers-color-scheme: light)', color: '#0D1B4B' },
+    { media: '(prefers-color-scheme: dark)', color: '#0D1B4B' },
   ],
   colorScheme: 'light',
 };
 
-/**
- * Root metadata. Every page inherits these defaults; pages that need their
- * own title/description export their own `metadata` which will merge via
- * the title.template below.
- */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -64,14 +53,8 @@ export const metadata: Metadata = {
   referrer: 'origin-when-cross-origin',
   creator: SITE_CONFIG.name,
   publisher: SITE_CONFIG.name,
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  alternates: {
-    canonical: '/',
-  },
+  formatDetection: { email: false, address: false, telephone: false },
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: SITE_CONFIG.locale,
@@ -106,20 +89,12 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: '/assets/logos/logo-navy-red-cropped.svg', type: 'image/svg+xml' },
-    ],
-    apple: [
-      { url: '/assets/logos/logo-navy-red-cropped.svg' },
-    ],
+    icon: [{ url: '/assets/logos/logo-navy-red-cropped.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/assets/logos/logo-navy-red-cropped.svg' }],
   },
   category: 'business',
 };
 
-/**
- * Organization schema (JSON-LD). Rendered in the <head> so crawlers pick it up.
- * This is the single most impactful structured-data signal for a corporate site.
- */
 function OrganizationJsonLd() {
   const data = {
     '@context': 'https://schema.org',
@@ -136,44 +111,35 @@ function OrganizationJsonLd() {
     },
     description: SITE_CONFIG.description,
     slogan: SITE_CONFIG.tagline,
-    sameAs: [SITE_CONFIG.social.linkedin, SITE_CONFIG.social.twitter],
+    sameAs: [
+      SITE_CONFIG.social.linkedin,
+      SITE_CONFIG.social.youtube,
+      SITE_CONFIG.social.instagram,
+      SITE_CONFIG.social.tiktok,
+    ],
     contactPoint: {
       '@type': 'ContactPoint',
       email: SITE_CONFIG.contact.email,
       contactType: 'Customer Support',
       availableLanguage: ['English'],
     },
-    areaServed: [
-      { '@type': 'Place', name: 'Africa' },
-      { '@type': 'Place', name: 'West Africa' },
-      { '@type': 'Place', name: 'East Africa' },
-      { '@type': 'Place', name: 'Southern Africa' },
-      { '@type': 'Place', name: 'North Africa' },
-      { '@type': 'Place', name: 'MENA' },
-    ],
+    areaServed: SITE_CONFIG.markets.map((m) => ({ '@type': 'Place', name: m })),
     knowsAbout: [
-      'Executive Search',
-      'Retained Search',
-      'Talent Development',
-      'Leadership Recruitment',
-      'Emerging Markets Talent',
+      'Executive Search Africa',
+      'Graduate Talent Programs',
+      'Country Manager Recruitment',
+      'African Leadership',
     ],
   };
 
   return (
     <script
       type="application/ld+json"
-      // Using dangerouslySetInnerHTML is the standard pattern for JSON-LD in Next.
-      // The content is a fully-controlled server-generated string with no user input.
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
 }
 
-/**
- * WebSite schema — enables sitelinks search box in Google and establishes
- * the site entity for other structured-data relationships.
- */
 function WebsiteJsonLd() {
   const data = {
     '@context': 'https://schema.org',

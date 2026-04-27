@@ -1,17 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { SITE_CONFIG } from '@/lib/site-config';
 
-/**
- * Auto-generated Open Graph image served at /opengraph-image.
- * Rendered by Next.js at request time as a 1200x630 PNG using this component.
- *
- * Any time the tagline or branding changes, this image updates without
- * needing a separate design asset or export step.
- *
- * Runs on the Node runtime so it works on Render, Railway, Fly, and any
- * standard Node host. Next caches the output aggressively in production.
- */
-
 export const runtime = 'nodejs';
 export const alt = `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`;
 export const size = { width: 1200, height: 630 };
@@ -28,13 +17,12 @@ export default async function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '72px 80px',
-          background: '#0B2C4A',
+          background: '#070E26',
           color: 'white',
           fontFamily: 'sans-serif',
           position: 'relative',
         }}
       >
-        {/* Top-right red glow */}
         <div
           style={{
             position: 'absolute',
@@ -44,44 +32,43 @@ export default async function OpengraphImage() {
             height: 700,
             borderRadius: '50%',
             background:
-              'radial-gradient(circle, rgba(229,57,53,0.18) 0%, rgba(229,57,53,0.04) 45%, transparent 70%)',
+              'radial-gradient(circle, rgba(201,169,97,0.18) 0%, rgba(201,169,97,0.04) 45%, transparent 70%)',
           }}
         />
 
-        {/* Top row: eyebrow */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 14,
-            fontSize: 18,
+            fontSize: 16,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.55)',
+            color: 'rgba(201,169,97,0.85)',
             fontWeight: 600,
           }}
         >
-          <div style={{ width: 48, height: 1, background: 'rgba(255,255,255,0.35)' }} />
-          <span>Executive Search · GT Program · Talent Pool</span>
+          <div style={{ width: 56, height: 2, background: '#C9A961' }} />
+          <span>Executive Talent · Graduate Trainee · Africa</span>
         </div>
 
-        {/* Headline */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            fontSize: 84,
+            fontSize: 96,
             fontWeight: 700,
-            lineHeight: 1.02,
-            letterSpacing: '-0.03em',
+            lineHeight: 1.0,
+            letterSpacing: '-0.035em',
             maxWidth: 1000,
           }}
         >
-          <span>Your talent partner in</span>
-          <span style={{ color: '#EF5350', fontStyle: 'italic' }}>markets that matter.</span>
+          <span>Hire <span style={{ color: '#C9A961' }}>proven</span> talent.</span>
+          <span style={{ fontSize: 40, fontWeight: 400, marginTop: 16, color: 'rgba(255,255,255,0.7)' }}>
+            We build and deploy African leaders who perform anywhere.
+          </span>
         </div>
 
-        {/* Bottom row: brand + URL */}
         <div
           style={{
             display: 'flex',
@@ -91,16 +78,8 @@ export default async function OpengraphImage() {
             borderTop: '1px solid rgba(255,255,255,0.12)',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-            }}
-          >
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '0.04em' }}>
-              BRIDGE
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: '0.04em' }}>BRIDGE</div>
             <div
               style={{
                 fontSize: 12,
@@ -118,17 +97,15 @@ export default async function OpengraphImage() {
               fontSize: 14,
               fontWeight: 500,
               letterSpacing: '0.18em',
-              color: 'rgba(255,255,255,0.45)',
+              color: 'rgba(201,169,97,0.7)',
               textTransform: 'uppercase',
             }}
           >
-            Africa · Emerging Markets
+            bridgegtp.com
           </div>
         </div>
       </div>
     ),
-    {
-      ...size,
-    },
+    { ...size },
   );
 }
