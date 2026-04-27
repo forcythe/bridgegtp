@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy: 13 27 75;
+    --color-red: 229 57 53;
+    --color-red-light: 239 83 80;
+    --color-gold: 201 169 97;
+    --color-cream: 250 248 244;
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply font-body bg-cream text-navy antialiased;
+    font-feature-settings: 'kern', 'liga';
+  }
+
+  ::selection {
+    @apply bg-red text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Anchor links land below the sticky nav */
+  section[id], div[id] {
+    scroll-margin-top: 80px;
+  }
+}
+
+@layer components {
+  /*
+    EYEBROW LABEL — small uppercase tag above section titles
+    Per brief: gold accent for highlights only
+  */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-[11px] font-heading font-bold uppercase tracking-[0.22em];
+    color: rgb(var(--color-gold));
+  }
+  .eyebrow::before {
+    content: '';
+    @apply block w-7 h-px;
+    background: rgb(var(--color-gold));
+  }
+  .eyebrow-red {
+    color: rgb(var(--color-red));
+  }
+  .eyebrow-red::before {
+    background: rgb(var(--color-red));
+  }
+  .eyebrow-light {
+    @apply text-white/60;
+  }
+  .eyebrow-light::before {
+    @apply bg-white/40;
+  }
+
+  /*
+    SECTION TITLES — Point72-scale, very heavy, very tight
+    "It should hit you"
+  */
+  .display-title {
+    @apply font-heading font-bold leading-[1.0] tracking-[-0.035em];
+    font-size: clamp(40px, 5.5vw, 76px);
+  }
+
+  .section-title {
+    @apply font-heading font-bold leading-[1.05] tracking-[-0.028em];
+    font-size: clamp(32px, 4vw, 56px);
+  }
+
+  .section-intro {
+    @apply text-lg leading-[1.7] max-w-prose;
+  }
+
+  /*
+    BUTTONS — sharper, more confident
+  */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2.5 bg-red text-white font-heading font-bold text-[14px]
+      px-9 py-4 rounded-sm tracking-[0.04em]
+      transition-all duration-200 ease-out
+      hover:bg-red-dark hover:-translate-y-0.5 hover:shadow-red-glow
+      active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2.5 font-heading font-bold text-[14px]
+      px-9 py-4 rounded-sm tracking-[0.04em]
+      transition-all duration-200 ease-out
+      bg-navy text-white
+      hover:bg-navy-700 hover:-translate-y-0.5 hover:shadow-elev-3
+      active:scale-[0.98];
+  }
+
+  .btn-ghost-light {
+    @apply inline-flex items-center justify-center gap-2.5 font-heading font-bold text-[14px]
+      px-9 py-4 rounded-sm tracking-[0.04em] text-white
+      transition-all duration-200 ease-out
+      bg-transparent border-[1.5px] border-white/30
+      hover:border-white/70 hover:bg-white/[0.04]
+      active:scale-[0.98];
+  }
+
+  .btn-ghost-dark {
+    @apply inline-flex items-center justify-center gap-2.5 font-heading font-bold text-[14px]
+      px-9 py-4 rounded-sm tracking-[0.04em] text-navy
+      transition-all duration-200 ease-out
+      bg-transparent border-[1.5px] border-navy/25
+      hover:border-navy hover:bg-navy/[0.04]
+      active:scale-[0.98];
+  }
+
+  /*
+    LINK ARROW — used in service cards and CTAs ("→ View Details")
+  */
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-heading font-bold text-[13px] tracking-[0.05em]
+      uppercase transition-all duration-200;
+  }
+  .link-arrow .arrow {
+    @apply inline-block transition-transform duration-200;
+  }
+  .link-arrow:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /*
+    CARDS
+  */
+  .card-light {
+    @apply bg-white rounded-md p-10 shadow-elev-2 border border-transparent
+      transition-all duration-300 ease-out
+      hover:shadow-elev-3 hover:-translate-y-1;
+  }
+
+  .card-dark {
+    @apply bg-navy-700 rounded-md p-10 border border-white/[0.06]
+      transition-all duration-300 ease-out
+      hover:bg-navy-500 hover:-translate-y-1;
+  }
+
+  /*
+    PILL TAGS
+  */
+  .pill {
+    @apply font-heading font-semibold text-[11px] px-3 py-1.5 rounded-full bg-cream-warm text-navy uppercase tracking-[0.06em];
+  }
+  .pill-gold {
+    @apply font-heading font-semibold text-[11px] px-3 py-1.5 rounded-full uppercase tracking-[0.06em];
+    background: rgb(var(--color-gold) / 0.12);
+    color: rgb(var(--color-gold));
+  }
+
+  /*
+    FORM CONTROLS — work on dark backgrounds
+  */
+  .form-label {
+    @apply block font-heading text-[10px] font-bold uppercase tracking-[0.16em] text-white/55 mb-2;
+  }
+
+  .form-input {
+    @apply w-full font-body text-[15px] text-white bg-white/[0.04] rounded-sm px-4 py-3.5 outline-none transition-colors duration-200;
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+  }
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+  }
+  .form-input:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .form-input:focus {
+    @apply bg-white/[0.06];
+    border-color: rgb(var(--color-red));
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.2);
+  }
+  .form-select option, .form-select optgroup {
+    background: #1a1a1a;
+    color: white;
+  }
+}
+
+@layer utilities {
+  /*
+    SECTION BACKGROUND SYSTEM — alternating, distinct, no more "gray mush"
+    Each section is a "distinct room" per the brief
+  */
+  .bg-section-cream { @apply bg-cream; }
+  .bg-section-light { @apply bg-white; }
+  .bg-section-warm  { @apply bg-cream-warm; }
+  .bg-section-navy  { @apply bg-navy text-white; }
+  .bg-section-deep  { @apply bg-navy-800 text-white; }
+  .bg-section-ink   { @apply bg-ink text-white; }
+
+  .container-wide {
+    @apply max-w-container mx-auto px-6 md:px-10 lg:px-12;
+  }
+
+  .section-y {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .section-y-tight {
+    @apply py-14 md:py-20;
+  }
+
+  /* Subtle gold rule, used on dark sections */
+  .gold-rule {
+    height: 2px;
+    width: 56px;
+    background: rgb(var(--color-gold));
+  }
+
+  /* Hero overlay for image backgrounds */
+  .hero-overlay-dark {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 14, 38, 0.78) 0%,
+      rgba(7, 14, 38, 0.85) 60%,
+      rgba(7, 14, 38, 0.95) 100%
+    );
+  }
+
+  /* Decorative glow */
+  .hero-glow-gold {
+    background: radial-gradient(
+      circle,
+      rgba(201, 169, 97, 0.18) 0%,
+      transparent 65%
+    );
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 800ms ease-out, transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
