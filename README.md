@@ -1,8 +1,8 @@
-# Bridge Global Talent Partners — Next.js
+# Bridge Global Talent Partners — bridgegtp.com
 
-Production-grade corporate website for **Bridge Global Talent Partners** — a premium executive search and talent development firm for Africa and emerging markets.
+Production website for **Bridge Global Talent Partners** — premium executive search and graduate trainee programs for companies operating in Africa.
 
-**Stack:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · React 18
+**Stack:** Next.js 14 App Router · TypeScript · Tailwind CSS · MDX · React 18
 
 ---
 
@@ -15,89 +15,183 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-**Scripts:**
-
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Local dev server with fast refresh |
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
-| `npm run lint` | ESLint (Next.js recommended rules) |
-| `npm run type-check` | TypeScript check without emit |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript check |
 
 ---
 
-## Before deploying — change these two things
+## Site map
 
-1. **Production domain** — `lib/site-config.ts` is already set to `https://bridgegtp.com`:
-   ```ts
-   export const SITE_URL = 'https://bridgegtp.com';
+| Route | What lives there |
+| --- | --- |
+| `/` | Homepage — Hero → Services → Who We Are → Africa View → CTA |
+| `/about` | About page (the editorial thesis) |
+| `/executive-talent` | Executive Talent service page (Hero → Proof → What → Why → CTA) |
+| `/graduate-trainee` | Graduate Trainee service page (Hero → Proof → What → Why → Case Study → CTA) |
+| `/contact` | Speak to Us — contact form with interest routing |
+| `/blog` | Insights index with categories sidebar |
+| `/blog/[slug]` | Individual blog post (MDX) |
+| `/blog/category/[slug]` | Category archive |
+| `/sitemap.xml` | Auto-generated, includes all routes + blog posts |
+| `/robots.txt` | Auto-generated |
+| `/opengraph-image` | Auto-generated 1200×630 OG image |
+
+---
+
+## Editing content
+
+### Site-wide config
+**`lib/site-config.ts`** — single source of truth. Domain, social URLs, contact email, tagline. Changing `SITE_URL` here updates canonical URLs, sitemap, robots.txt, OG image URL, and every JSON-LD block in one go.
+
+### Service-page copy
+- `/executive-talent` → `app/executive-talent/page.tsx`
+- `/graduate-trainee` → `app/graduate-trainee/page.tsx`
+
+Copy is hardcoded as JSX strings in each page. To edit, open the page file and edit the strings directly. They're labelled with comments matching the section names from the brief (`WHAT WE DO`, `WHY US`, `CASE STUDY`).
+
+### Blog posts
+Posts are MDX files in `content/blog/`. To add a new post:
+
+1. Create `content/blog/your-slug.mdx`
+2. Front matter goes at the top:
+   ```mdx
+   ---
+   title: "Your headline"
+   description: "One-sentence summary for search engines and previews."
+   date: "2026-05-01"
+   author: "Bridge Editorial"
+   category: "Africa Insights"
+   tags: ["talent", "africa"]
+   draft: false
+   ---
+
+   Body content in **markdown**. Headings with `##` and `###` work,
+   as do lists, quotes, and links.
    ```
-   If the domain ever changes, that's the only edit needed — canonical URLs, sitemap, robots.txt, OG tags, and every JSON-LD block read from this constant.
+3. Save. The post appears at `/blog/your-slug` and the slugified category page at `/blog/category/<slug>`. Sitemap and category sidebar update automatically.
+4. Set `draft: true` to hide a post from production but keep it visible in `npm run dev`.
 
-2. **Social handles and contact email** — also in `lib/site-config.ts`. LinkedIn is currently a best-guess slug, confirm it matches the actual company page:
-   ```ts
-   social: {
-     linkedin: 'https://www.linkedin.com/company/bridge-global-talent-partners',
-     twitter: 'https://twitter.com/bridgegtp',
-   },
-   contact: {
-     email: 'hello@bridgegtp.com',
-   },
-   ```
+### Client logos
+**`lib/clients.ts`** — list of companies with logos rendered in the proof bar. Add a new entry:
+```ts
+{
+  name: 'New Co',
+  slug: 'new-co',
+  logo: '/clients/new-co.svg',
+  url: 'https://newco.com',
+  bg: 'light',  // or 'dark' if the logo is white-on-dark
+}
+```
+Drop the logo file in `public/clients/`.
 
-Everything else — structured data, OG image, sitemap — picks these up automatically.
+> **One missing logo right now:** Initio Capital. The PDF brief listed `initiocapital.com` but no logo was provided. The entry in `lib/clients.ts` has an empty `logo` path and is filtered out of the rendered list. Drop a logo into `public/clients/initio.png` (or `.svg`) and update `lib/clients.ts` line 38 to enable it.
 
----
+### Real photography (in progress)
 
-## SEO features wired in
+The `WhoWeAre`, `graduate-trainee`, and `about` components currently render **gradient placeholders** where real candidate / cohort / presentation photos will go. Each placeholder has a `label` describing what the photo should be (e.g. "Cohort 04 induction").
 
-**Metadata (per-page and root):**
-- Title template with automatic suffix (`%s · Bridge Global Talent Partners`)
-- Description, keywords, author, publisher
-- Canonical URL via `alternates.canonical`
-- `metadataBase` so Next resolves relative OG/image URLs correctly
-- Open Graph tags (title, description, locale, type, images)
-- Twitter Card tags (`summary_large_image`)
-- Robots directives (index + follow, `max-image-preview: large`)
+**To swap placeholders for real photos:**
+1. Drop images into `public/photos/` (e.g. `public/photos/cohort-04-induction.jpg`)
+2. In each component, replace the `<ImagePlaceholder ... />` JSX with `<Image src="/photos/cohort-04-induction.jpg" ... />` from `next/image`
+3. Always include a meaningful `alt` attribute and explicit `width`/`height` (or `fill` with a sized parent)
 
-**Structured data (JSON-LD):**
-- `Organization` schema in the root layout (name, logo, description, social links, contact point, area served)
-- `WebSite` schema (enables sitelinks search box)
-- `ProfessionalService` schema with `hasOfferCatalog` listing the three services (on the homepage)
-
-**Discovery:**
-- `app/sitemap.ts` → dynamic `/sitemap.xml`
-- `app/robots.ts` → dynamic `/robots.txt` pointing to the sitemap
-- `app/opengraph-image.tsx` → server-generated 1200×630 OG image at `/opengraph-image`
-
-**Semantic HTML:**
-- Single `<h1>` (in the hero), nested `<h2>`/`<h3>` for the heading hierarchy
-- `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, `<nav>` used semantically
-- `aria-labelledby` on every section pointing to its heading
-- `aria-current`, `aria-expanded`, `aria-controls`, `role="tab"` etc. on interactive elements
-- Descriptive `alt` text on all images, `aria-hidden` on decorative ones
-
-**Performance:**
-- `next/font/local` for Montserrat and Lato — automatic subsetting, preload, `display: swap`, variable fonts
-- `next/image` for all images with explicit dimensions, `priority` on the nav logo (LCP element), AVIF/WebP negotiation
-- Server Components by default — only `Nav`, `Leaderboard`, and `Join` are client components (they have interactive state)
-- Long cache headers on `/fonts` and `/assets` via `next.config.mjs`
-- Security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy)
-- `poweredByHeader: false`, `compress: true`
+> **Important — privacy:** any identifiable person in a photo on this site needs explicit, written consent for public use. This applies especially to candidate photos and the Starks Associate case study. Photo consent is not a code concern but it is a legal one — verify with each subject before going live.
 
 ---
 
-## Mobile and accessibility
+## Design system
 
-- **Mobile menu:** full-screen overlay, body-scroll-lock while open, Escape-to-close, auto-focus on the first link, closes on navigation
-- **Leaderboard responsive strategy:** on `md+` renders as a 6-column data table; on smaller screens collapses into stacked cards so no content is hidden
-- **Touch targets:** interactive elements are 44×44 px minimum
-- **Mobile input hints:** every `<input>` has `type`, `inputMode`, and `autocomplete` set correctly so the phone keyboard matches
-- **Reduced motion:** `prefers-reduced-motion` media query disables all transitions and animations
-- **Fluid type:** `clamp()` on every heading across breakpoints
-- **Focus states:** visible ring on every tabbable element, no `outline: none` anywhere
-- **Colour contrast:** all body text meets WCAG AA (4.5:1) against its background; large text meets AAA
+### Colours (Tailwind utilities)
+| Token | Value | Use |
+| --- | --- | --- |
+| `navy` | `#0D1B4B` | Primary brand colour |
+| `navy-700` | `#0A1538` | Card backgrounds on dark sections |
+| `navy-800` | `#070E26` | Deep section backgrounds |
+| `navy-900` | `#040818` | Footer |
+| `red` | `#E53935` | Primary CTAs, accents |
+| `gold` | `#C9A961` | Highlights, eyebrows, italic text accents |
+| `cream` | `#FAF8F4` | Light section backgrounds (warmer than pure white) |
+
+### Typography scale
+- `display-title` — Hero H1 (`clamp(40px → 76px)`, weight 700, very tight tracking)
+- `section-title` — Section H2 (`clamp(32px → 56px)`)
+- `eyebrow` — small uppercase tags (gold by default, red via `.eyebrow-red`, white on dark via `.eyebrow-light`)
+
+### Component utilities (in `app/globals.css`)
+- `.btn-primary` / `.btn-secondary` / `.btn-ghost-light` / `.btn-ghost-dark`
+- `.card-light` / `.card-dark`
+- `.pill` / `.pill-gold`
+- `.link-arrow` (animates the `→` on hover)
+- `.gold-rule` (decorative 56×2 gold line)
+- `.section-y` / `.section-y-tight` (vertical padding scale)
+- `.bg-section-cream/-light/-warm/-navy/-deep/-ink` (alternating section backgrounds)
+
+---
+
+## SEO
+
+**Per-page metadata.** Every route exports its own `metadata` object with title, description, and canonical URL. Default title template is `<page> · Bridge Global Talent Partners`.
+
+**Structured data (JSON-LD).** Embedded server-side in `<head>`:
+- Root layout — `Organization` + `WebSite`
+- Homepage — `ProfessionalService` with `hasOfferCatalog` listing both services
+- Service pages — `Service` schema each
+- Blog posts — `BlogPosting` schema with author, dates, category
+- Blog index — `Blog` schema
+
+**Discovery.**
+- `app/sitemap.ts` — dynamic sitemap with all static routes + blog posts + categories
+- `app/robots.ts` — points at the sitemap, allows everything by default
+- `app/opengraph-image.tsx` — server-generated 1200×630 OG image (Node runtime, works on Netlify out of the box)
+
+**Performance.**
+- `next/font/local` for both font families (preloaded, subsetted, `display: swap`)
+- `next/image` for every image with explicit dimensions and AVIF/WebP negotiation
+- Server Components by default — only `Nav` and `ContactForm` are client components
+- 1-year immutable `Cache-Control` on `/fonts` and `/assets`
+- Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy
+
+---
+
+## Deployment — GitHub + Netlify
+
+The project is configured for [Netlify](https://netlify.com) via `netlify.toml`. Each push to `main` triggers an automatic deploy.
+
+### First-time setup
+
+1. Sign in at https://app.netlify.com/ (use GitHub auth)
+2. **Add new site → Import an existing project → GitHub → `forcythe/bridgegtp`**
+3. Netlify reads `netlify.toml` and configures the build automatically
+4. First build takes ~3–5 minutes; you'll get a URL like `https://bridgegtp-ab12.netlify.app`
+
+### Custom domain
+
+In Netlify: **Site → Domain management → Add a domain you already own → `bridgegtp.com`**
+
+Add `www.bridgegtp.com` as a redirect (Netlify will offer this).
+
+DNS records:
+- **Apex**: `A` records to Netlify's load-balancer IPs (Netlify shows them)
+- **www**: `CNAME` to `<your-site>.netlify.app`
+
+Or, simpler: point your nameservers at Netlify DNS. Either way, Let's Encrypt SSL is provisioned automatically once DNS resolves.
+
+### CI
+
+`.github/workflows/ci.yml` runs lint + type-check + build on every push and PR. Netlify's deploy is independent — it builds whether CI passed or not, so a CI failure blocks merge but won't block deploy. If you want CI to gate deploys, add Netlify's deploy as a downstream job after CI passes.
+
+### Verify after first deploy
+
+- `https://bridgegtp.com/` — site loads
+- `https://bridgegtp.com/sitemap.xml` — sitemap renders
+- `https://bridgegtp.com/robots.txt` — robots renders
+- `https://bridgegtp.com/opengraph-image` — 1200×630 PNG
+- Submit `sitemap.xml` to Google Search Console and Bing Webmaster Tools
 
 ---
 
@@ -106,171 +200,60 @@ Everything else — structured data, OG image, sitemap — picks these up automa
 ```
 bridge-gtp/
 ├── app/
-│   ├── layout.tsx                 ← Root layout: fonts, metadata, JSON-LD (Org + WebSite)
-│   ├── page.tsx                   ← Homepage, page metadata, ProfessionalService JSON-LD
-│   ├── globals.css                ← Tailwind + component utilities + tokens
-│   ├── sitemap.ts                 ← Dynamic /sitemap.xml
-│   ├── robots.ts                  ← Dynamic /robots.txt
-│   └── opengraph-image.tsx        ← Edge-generated /opengraph-image (1200×630 PNG)
+│   ├── layout.tsx                  Root layout, fonts, metadata, Org + WebSite JSON-LD
+│   ├── page.tsx                    Homepage
+│   ├── globals.css                 Tailwind + design tokens + component utilities
+│   ├── sitemap.ts                  Dynamic /sitemap.xml
+│   ├── robots.ts                   Dynamic /robots.txt
+│   ├── opengraph-image.tsx         /opengraph-image (1200×630 PNG)
+│   ├── about/page.tsx              /about
+│   ├── contact/page.tsx            /contact
+│   ├── executive-talent/page.tsx   /executive-talent
+│   ├── graduate-trainee/page.tsx   /graduate-trainee
+│   └── blog/
+│       ├── page.tsx                /blog (index)
+│       ├── [slug]/page.tsx         /blog/<post-slug>
+│       └── category/[slug]/page.tsx /blog/category/<category-slug>
 ├── components/
-│   ├── Nav.tsx                    ← 'use client' — sticky nav + mobile menu + scroll-spy
-│   ├── Hero.tsx                   ← Navy hero with H1, CTAs, 3 teaser cards
-│   ├── Offerings.tsx              ← 3-column services on gray bg
-│   ├── About.tsx                  ← 2-col: statement + paragraphs, navy callout aside
-│   ├── GTProgram.tsx              ← 4-step progress rail + callout + who-it's-for card
-│   ├── ForCompanies.tsx           ← Navy section, 3 translucent numbered cards
-│   ├── Leaderboard.tsx            ← 'use client' — tabs + filters + table/cards
-│   ├── Join.tsx                   ← 'use client' — track picker + form + success state
-│   └── Footer.tsx                 ← Dark footer with watermark + 4-col links
+│   ├── Nav.tsx                     'use client' — sticky nav, scroll-spy, mobile menu
+│   ├── Hero.tsx                    Reusable hero with image-bg or gradient
+│   ├── ClientLogoBar.tsx           Static or marquee proof bar
+│   ├── ServicesGrid.tsx            Homepage 2-card services block
+│   ├── WhoWeAre.tsx                Editorial Block 3
+│   ├── AfricaView.tsx              Slim YouTube link section
+│   ├── PostCard.tsx                Blog listing card
+│   ├── ContactForm.tsx             'use client' — interest-routed form
+│   ├── CtaBanner.tsx               Reusable closing CTA
+│   └── Footer.tsx                  Dark footer with social icons
+├── content/
+│   └── blog/
+│       └── why-africa-hires-differently.mdx   Starter post
 ├── lib/
-│   ├── site-config.ts             ← ★ Single source of truth — edit domain here
-│   └── leaderboard-data.ts        ← Leaderboard dataset + types
+│   ├── site-config.ts              ★ Edit domain, social, contact here
+│   ├── clients.ts                  Client logo manifest
+│   └── blog.ts                     MDX loading, categories, related posts
 ├── public/
-│   ├── fonts/                     ← Montserrat (Bold, SemiBold) + Lato (5 weights)
-│   └── assets/logos/              ← 11 SVG variants (8 originals + 3 cropped)
+│   ├── fonts/                      Montserrat + Lato TTFs
+│   ├── assets/logos/               Bridge logo variants (Phase 1)
+│   └── clients/                    Client logos (Starks, Doss, etc.)
+├── netlify.toml                    Netlify build config
 ├── next.config.mjs
 ├── tailwind.config.ts
 ├── postcss.config.js
 ├── tsconfig.json
 ├── package.json
-└── README.md
+└── .github/workflows/ci.yml        GitHub Actions: lint + type-check + build
 ```
 
 ---
 
-## Design tokens
+## Outstanding work
 
-All tokens live in `tailwind.config.ts` (colours, shadows, font families) and `app/globals.css` (CSS custom properties, component utilities). No magic hex values scattered across components.
+These are the items expected to land after the initial deploy:
 
-**Colours:**
-- `navy` (`#0B2C4A`) + `.dark`, `.mid`, `.light` shades
-- `red` (`#E53935`) + `.dark`, `.light`, `.muted` shades
-- Gray scale: 50/100/300/500/700/900
-
-**Typography:**
-- Heading: Montserrat Bold (700), SemiBold (600) — served locally via `next/font`
-- Body: Lato Thin/Light/Regular/Italic — served locally via `next/font`
-- The `--font-montserrat` and `--font-lato` CSS variables are wired into Tailwind's `font-heading` and `font-body` utilities
-
-**Component utilities** (in `globals.css`):
-- `.btn-primary`, `.btn-ghost` — CTAs
-- `.eyebrow`, `.eyebrow-white` — the red section labels
-- `.section`, `.section-tight` — vertical padding scale
-- `.section-title`, `.section-intro` — typography patterns
-- `.pill` — rounded tag pills
-- `.form-label`, `.form-input` — dark-background form controls
-
----
-
-## Deployment — GitHub + Render
-
-This project is configured to deploy to [Render](https://render.com) from GitHub via a Blueprint file (`render.yaml`). The Node runtime is used throughout (no Edge dependencies), so everything works on Render's standard Web Service.
-
-### First-time setup
-
-1. **Push the repo to GitHub**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin git@github.com:<your-org>/bridgegtp.git
-   git push -u origin main
-   ```
-
-2. **Create the Render service**
-   - Log in to Render → **New +** → **Blueprint**
-   - Connect your GitHub account and pick this repository
-   - Render reads `render.yaml` and provisions the Web Service automatically
-   - First build takes ~3–4 minutes
-
-3. **Point the domain**
-   - In Render: your service → **Settings** → **Custom Domains** → add `bridgegtp.com` and `www.bridgegtp.com`
-   - At your DNS provider, create a `CNAME` for `www` pointing to the `onrender.com` hostname Render shows you, plus an `ALIAS`/`ANAME` (or `A` record to Render's IP) for the apex
-   - Render provisions Let's Encrypt SSL automatically
-
-4. **Verify SEO assets resolve at the live domain**
-   - `https://bridgegtp.com/` — site loads
-   - `https://bridgegtp.com/sitemap.xml` — sitemap renders
-   - `https://bridgegtp.com/robots.txt` — robots file renders
-   - `https://bridgegtp.com/opengraph-image` — 1200×630 PNG
-
-5. **Submit to search engines**
-   - Google Search Console → add property (domain verification via DNS), submit `sitemap.xml`
-   - Bing Webmaster Tools → same
-
-### How the deployment pipeline works
-
-- Every push to `main` on GitHub → Render auto-deploys (`autoDeploy: true` in `render.yaml`)
-- Every push and pull request → GitHub Actions runs `type-check` + `lint` + `build` (`.github/workflows/ci.yml`)
-- If CI fails on a PR, you'll see a red X in the PR — don't merge until it's green
-- Render only deploys what's on the branch set in `render.yaml` (`main` by default)
-
-### Render plan sizing
-
-The Blueprint uses the **Starter** plan ($7/mo). That's fine for a marketing site getting up to ~50k visits/month. If you hit traffic that matters, upgrade in the Render dashboard → **Settings** → **Instance Type**. The Blueprint line to change if you want it in code:
-
-```yaml
-plan: starter   # → "standard" or higher for more traffic
-```
-
-### Environment variables
-
-None required today — the site is fully static content with one client-side form. When you add env vars (analytics ID, form-submission endpoint, CMS keys), add them to:
-1. `render.yaml` under `envVars` — if they're non-secret defaults safe to commit
-2. Render dashboard → your service → **Environment** — for secrets
-3. `.env.local` — for local dev (already ignored by `.gitignore`)
-
-### Rollback
-
-In Render → your service → **Deploys** tab → pick any previous successful deploy → **Rollback**. Instant.
-
----
-
-## Alternative hosts
-
-If you ever move off Render:
-
-| Host | Change needed |
-| --- | --- |
-| **Vercel** | Remove `output: 'standalone'` from `next.config.mjs`, change `runtime: 'nodejs'` back to `runtime: 'edge'` in `app/opengraph-image.tsx`. Everything else works unchanged. |
-| **Railway / Fly / any Node host** | No changes needed. `render.yaml` is ignored by other hosts. |
-| **Docker / self-hosted** | `output: 'standalone'` is already on. Build with `npm run build` and the runtime bundle is at `.next/standalone/server.js`. Copy `.next/static` and `public/` alongside it in your Dockerfile. |
-
----
-
-## Adding a new section / page
-
-**New section on the homepage:**
-1. Create `components/NewSection.tsx` (Server Component unless it has state)
-2. Import and drop it into `app/page.tsx` between the relevant existing sections
-3. If it has an `id`, add a matching entry to the `LINKS` array in `components/Nav.tsx`
-
-**New top-level page (e.g. `/about`, `/privacy`):**
-1. Create `app/<route>/page.tsx`
-2. Export your own `metadata` object (title, description, canonical)
-3. Add the route to `app/sitemap.ts`
-
----
-
-## Performance targets
-
-These are the targets the code is written to hit; measure with Lighthouse after `npm run build && npm start`:
-
-- **Performance ≥ 95** (mobile and desktop)
-- **Accessibility ≥ 95**
-- **Best Practices ≥ 95**
-- **SEO = 100**
-- **LCP < 1.8 s** (on a 4G-throttled emulated device)
-- **CLS < 0.05**
-- **INP < 200 ms**
-
-The LCP element is the hero H1. The hero background is a CSS gradient (no image request). The logo in the nav is priority-loaded and the only image above the fold. Font loading uses `display: swap` with preconnect — no FOIT, minimal FOUT.
-
----
-
-## Copy / brand voice
-
-Content is lifted verbatim from the brand content document (`Bridge_GTP_Content_Document.docx`). The voice guidelines are summarised in the design-system README. **Never use:** synergy, leverage, ecosystem, disruptive, innovative, headhunter, "we are the best". **Always use:** partner, talent, mandate, placed, assessed, emerging markets, serious.
-
-Full content and voice guidelines are in the original design system ZIP under `project/README.md`.
+1. **Real photography** — Cohort, presentation, and on-the-ground images from the Drive folder. Drop into `public/photos/` and swap the placeholders in `WhoWeAre.tsx`, `app/graduate-trainee/page.tsx`, and `app/about/page.tsx`.
+2. **Initio Capital logo** — Add `public/clients/initio.svg` (or `.png`) and update `lib/clients.ts` line 38 to use it.
+3. **Hero background image** — Both service pages use the gradient hero by default. To use a real image instead, pass `bgImage="/photos/your-image.jpg"` to `<Hero ... />` in `app/executive-talent/page.tsx` and `app/graduate-trainee/page.tsx`.
+4. **Photo consent verification** — confirm written consent for any identifiable person before going live with their image.
+5. **Wire the contact form to a handler** — `components/ContactForm.tsx` currently just shows a success state on submit. Connect to Formspree, Netlify Forms, or your own API endpoint when ready.
+6. **Privacy / Terms / Cookies pages** — `/privacy`, `/terms`, `/cookies` are linked in the footer but don't exist as routes yet.
