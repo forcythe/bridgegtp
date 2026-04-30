@@ -1,197 +1,153 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { SITE_CONFIG } from '@/lib/site-config';
-import { Nav } from '@/components/Nav';
-import { Hero } from '@/components/Hero';
-import { ClientLogoBar } from '@/components/ClientLogoBar';
-import { CtaBanner } from '@/components/CtaBanner';
-import { Footer } from '@/components/Footer';
+import Image from 'next/image'
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
+import Divider from '@/components/Divider'
+import ContactForm from '@/components/ContactForm'
 
 export const metadata: Metadata = {
-  title: 'Graduate Trainee Program — For Companies That Want to Win',
-  description:
-    "Bridge designs and runs your graduate trainee program — from sourcing to training to deployment. We've been tracking top candidates since their undergraduate years.",
-  alternates: { canonical: '/graduate-trainee' },
-  openGraph: {
-    url: `${SITE_CONFIG.author.url}/graduate-trainee`,
-    title: 'Graduate Trainee Program — Bridge Global Talent Partners',
-    description: 'We run your graduate program — properly. From sourcing to training to deployment.',
-  },
-};
-
-function ServiceJsonLd() {
-  const data = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Graduate Trainee Program',
-    provider: { '@id': `${SITE_CONFIG.author.url}/#organization` },
-    description: 'Bridge designs and runs graduate trainee programs — from sourcing and selection to structured training and deployment.',
-    areaServed: { '@type': 'Place', name: 'Africa' },
-    audience: { '@type': 'BusinessAudience', name: 'Companies operating in Africa' },
-  };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  title: 'Graduate Trainee Program',
+  description: 'We design and run your graduate trainee program — from sourcing to training to deployment.',
 }
 
-export default function GraduateTraineePage() {
+export default function GraduateTrainee() {
   return (
     <>
-      <ServiceJsonLd />
-      <Nav theme="dark" />
-      <main id="main">
-        <Hero
-          size="standard"
-          eyebrow="Graduate Trainee Program"
-          title={
-            <>
-              For companies that want to <em className="not-italic text-gold">win.</em>
-            </>
-          }
-          description="We run your graduate program — properly."
-          primaryCta={{ label: 'Speak to Us', href: '/contact' }}
-        />
-
-        {/* PROOF */}
-        <section className="bg-section-light section-y-tight border-b border-navy/8" aria-labelledby="gt-proof-heading">
-          <div className="container-wide">
-            <h2 id="gt-proof-heading" className="sr-only">Companies we&apos;ve worked with</h2>
-            <ClientLogoBar variant="on-light" label="Worked with" />
+      {/* HERO — session-3.jpg */}
+      <section style={{ position:'relative', minHeight:'76vh', display:'flex', flexDirection:'column', justifyContent:'flex-end', overflow:'hidden' }}>
+        <Image src="/photos/session-3.jpg" alt="" fill style={{ objectFit:'cover', objectPosition:'center 40%' }} priority/>
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(4,18,32,0.97) 0%,rgba(7,30,51,0.88) 35%,rgba(7,30,51,0.5) 100%)' }}/>
+        <div style={{ position:'relative', zIndex:2, maxWidth:1200, margin:'0 auto', padding:'0 48px 80px', width:'100%' }}>
+          <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:11, fontWeight:700, letterSpacing:'0.22em', textTransform:'uppercase', color:'#C9A044', display:'flex', alignItems:'center', gap:12, marginBottom:22 }}>
+            <span style={{ display:'block', width:36, height:2, background:'#C9A044', flexShrink:0 }}/>Graduate Trainee Program
           </div>
-        </section>
+          <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(44px,7vw,88px)', fontWeight:700, color:'#fff', lineHeight:0.97, letterSpacing:'-0.03em', marginBottom:20 }}>For Companies<br/>That Want to Win.</h1>
+          <p style={{ fontSize:19, fontWeight:300, color:'rgba(255,255,255,0.6)', lineHeight:1.7, maxWidth:500, marginBottom:36 }}>We run your graduate program — properly.</p>
+          <Link href="/contact" className="btn-red">Speak to Us</Link>
+        </div>
+      </section>
 
-        {/* CANDIDATE / PRESENTATION IMAGE GRID — placeholders for now */}
-        <section className="bg-section-light pb-20" aria-label="Programme imagery">
-          <div className="container-wide">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              {[
-                { label: 'Cohort 04 induction', tone: 'navy' },
-                { label: 'Case work session', tone: 'gold' },
-                { label: 'Final presentation', tone: 'warm' },
-                { label: 'Mentor review', tone: 'navy' },
-              ].map((p, i) => (
-                <div
-                  key={i}
-                  aria-hidden
-                  className={[
-                    'relative rounded-md overflow-hidden flex items-end p-4 aspect-[4/5]',
-                    p.tone === 'navy' && 'bg-gradient-to-br from-navy-700 to-navy',
-                    p.tone === 'gold' && 'bg-gradient-to-br from-gold to-gold-dark',
-                    p.tone === 'warm' && 'bg-gradient-to-br from-cream-warm to-cream',
-                  ].filter(Boolean).join(' ')}
-                >
-                  <span
-                    className={[
-                      'font-heading text-[10px] font-bold tracking-[0.2em] uppercase',
-                      p.tone === 'warm' ? 'text-navy/40' : 'text-white/65',
-                    ].join(' ')}
-                  >
-                    {p.label}
-                  </span>
+      <Divider/>
+
+      {/* PROOF — logos + 5-photo mosaic */}
+      <section style={{ background:'#fff' }}>
+        <div className="section tight">
+          <div className="eyebrow">Worked With</div>
+          <div style={{ display:'flex', alignItems:'center', gap:40, flexWrap:'wrap', marginBottom:44 }}>
+            {['/clients/alexander-tax-law.webp','/clients/doss-law.png','/clients/rdl-consulting.webp'].map((src,i) => (
+              <Image key={i} src={src} alt="" width={120} height={28} style={{ height:28, width:'auto', objectFit:'contain', opacity:0.75, filter:'grayscale(30%)' }}/>
+            ))}
+            <span style={{ fontFamily:"'Montserrat',sans-serif", fontSize:13, fontWeight:700, color:'var(--gray-500)', padding:'4px 14px', border:'1.5px solid var(--gray-100)', borderRadius:3 }}>Young Finance Leaders</span>
+            <span style={{ fontFamily:"'Montserrat',sans-serif", fontSize:13, fontWeight:700, color:'#C9A044', padding:'4px 14px', border:'1.5px solid var(--navy)', borderRadius:3, background:'var(--navy)' }}>Starks Associates</span>
+          </div>
+          {/* 5-photo mosaic */}
+          <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr', gridTemplateRows:'1fr 1fr', gap:6, height:480, borderRadius:6, overflow:'hidden' }}>
+            <div style={{ position:'relative', gridRow:'span 2' }}><Image src="/photos/session-1.jpg" alt="" fill style={{ objectFit:'cover', filter:'brightness(1.05) contrast(1.06)' }}/></div>
+            <div style={{ position:'relative' }}><Image src="/photos/candidate-1.jpg" alt="" fill style={{ objectFit:'cover', filter:'brightness(1.05) contrast(1.06)' }}/></div>
+            <div style={{ position:'relative' }}><Image src="/photos/candidate-2.jpg" alt="" fill style={{ objectFit:'cover', filter:'brightness(1.05) contrast(1.06)' }}/></div>
+            <div style={{ position:'relative' }}><Image src="/photos/session-2.jpg" alt="" fill style={{ objectFit:'cover', filter:'brightness(1.05) contrast(1.06)' }}/></div>
+            <div style={{ position:'relative' }}><Image src="/photos/candidate-5.jpg" alt="" fill style={{ objectFit:'cover', filter:'brightness(1.05) contrast(1.06)' }}/></div>
+          </div>
+        </div>
+      </section>
+
+      <Divider/>
+
+      {/* WHAT WE DO */}
+      <section style={{ background:'var(--navy)' }}>
+        <div className="section">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'center' }}>
+            <div>
+              <div className="eyebrow muted">What We Do</div>
+              <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(26px,3.5vw,44px)', fontWeight:700, color:'#fff', lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:20 }}>We take it off your plate.</h2>
+              <p style={{ fontSize:17, fontWeight:300, color:'rgba(255,255,255,0.55)', lineHeight:1.85 }}>You don't have time to build talent systems. We design and run your graduate trainee program — from sourcing to training to deployment.</p>
+            </div>
+            <div style={{ borderRadius:4, overflow:'hidden', aspectRatio:'4/3', position:'relative' }}>
+              <Image src="/photos/session-3.jpg" alt="Bridge session" fill style={{ objectFit:'cover' }}/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Divider/>
+
+      {/* WHY US */}
+      <section style={{ background:'#fff' }}>
+        <div className="section">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'center' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, height:440 }}>
+              {['/photos/candidate-4.jpg','/photos/session-4.jpg'].map((src,i) => (
+                <div key={i} style={{ position:'relative', borderRadius:4, overflow:'hidden' }}>
+                  <Image src={src} alt="" fill style={{ objectFit:'cover', filter:'brightness(1.04)' }}/>
                 </div>
               ))}
             </div>
-            <p className="mt-5 text-xs text-navy/50">
-              Real photography from cohorts and presentations coming soon.
-            </p>
-          </div>
-        </section>
-
-        {/* WHAT WE DO */}
-        <section className="bg-section-cream section-y" aria-labelledby="gt-what-heading">
-          <div className="container-wide grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-            <div className="lg:col-span-5">
-              <p className="eyebrow mb-5">What We Do</p>
-              <h2 id="gt-what-heading" className="section-title text-navy">
-                We take it off your plate.
-              </h2>
-            </div>
-            <div className="lg:col-span-7 lg:pt-4">
-              <p className="text-navy/85 text-lg md:text-xl leading-[1.6] max-w-[55ch]">
-                You don&apos;t have time to build talent systems. We design and run your graduate
-                trainee program — from sourcing to training to deployment.
-              </p>
+            <div style={{ maxWidth:520 }}>
+              <div className="eyebrow">Why Us</div>
+              <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(18px,2vw,22px)', fontWeight:600, color:'var(--navy)', lineHeight:1.45, marginBottom:20 }}>We don't start at hiring.</div>
+              <p style={{ fontSize:16, fontWeight:300, color:'var(--gray-500)', lineHeight:1.85 }}>We've been tracking top candidates since their undergraduate years — how they think, how they work, how they perform. By the time they enter your program, they are already tested.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* WHY US */}
-        <section className="bg-section-deep section-y" aria-labelledby="gt-why-heading">
-          <div className="container-wide grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-            <div className="lg:col-span-5">
-              <p className="eyebrow eyebrow-light mb-5">Why Us</p>
-              <h2 id="gt-why-heading" className="section-title text-white">
-                We don&apos;t start at hiring.
-              </h2>
+      <Divider/>
+
+      {/* CASE STUDY */}
+      <section style={{ background:'var(--navy)' }}>
+        <div className="section">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:72, alignItems:'center' }}>
+            <div style={{ borderRadius:4, overflow:'hidden', aspectRatio:'16/11', position:'relative' }}>
+              <Image src="/photos/session-2.jpg" alt="Starks Associates training" fill style={{ objectFit:'cover', filter:'brightness(1.04) contrast(1.04)' }}/>
             </div>
-            <div className="lg:col-span-7 lg:pt-4">
-              <p className="text-white/75 text-lg md:text-xl leading-[1.6] max-w-[55ch]">
-                We&apos;ve been tracking top candidates since their undergraduate years — how they
-                think, how they work, how they perform. By the time they enter your program, they
-                are already tested.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CASE STUDY */}
-        <section className="bg-section-light section-y" aria-labelledby="gt-case-heading">
-          <div className="container-wide">
-            <p className="eyebrow mb-5">Case Study</p>
-            <h2 id="gt-case-heading" className="section-title text-navy mb-10 max-w-[26ch]">
-              Starks Associates — we built their graduate pipeline from scratch.
-            </h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-              <div className="lg:col-span-7">
-                <ol className="space-y-6">
-                  {[
-                    { num: '01', text: 'Designed the hiring and selection process.' },
-                    { num: '02', text: 'Drew from our long-tracked candidate pool.' },
-                    { num: '03', text: 'Structured training and desk rotations.' },
-                    { num: '04', text: 'Evaluated performance under real conditions.' },
-                  ].map((step) => (
-                    <li key={step.num} className="flex gap-6 items-start pb-6 border-b border-navy/8">
-                      <span className="font-heading text-[14px] font-bold text-gold tracking-[0.05em] pt-1.5 shrink-0">
-                        {step.num}
-                      </span>
-                      <p className="font-heading text-xl md:text-2xl font-bold text-navy leading-[1.35] tracking-[-0.015em]">
-                        {step.text}
-                      </p>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              <div className="lg:col-span-5">
-                <div className="bg-navy text-white rounded-md p-8 md:p-10 sticky top-24">
-                  <p className="eyebrow eyebrow-light mb-5">Outcome</p>
-                  <ul className="space-y-5">
-                    <li>
-                      <p className="font-heading text-lg font-bold text-gold mb-1">High-performing hires</p>
-                      <p className="text-white/65 text-sm leading-[1.65]">From day one.</p>
-                    </li>
-                    <li>
-                      <p className="font-heading text-lg font-bold text-gold mb-1">Reduced hiring risk</p>
-                      <p className="text-white/65 text-sm leading-[1.65]">Tested candidates only.</p>
-                    </li>
-                    <li>
-                      <p className="font-heading text-lg font-bold text-gold mb-1">A repeatable system</p>
-                      <p className="text-white/65 text-sm leading-[1.65]">Year on year, cohort on cohort.</p>
-                    </li>
-                  </ul>
+            <div>
+              <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'0.18em', textTransform:'uppercase', color:'var(--red)', marginBottom:14 }}>Case Study — Starks Associates</div>
+              <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(22px,2.8vw,32px)', fontWeight:700, color:'#fff', lineHeight:1.2, marginBottom:24 }}>We built their graduate pipeline from scratch.</h2>
+              {['Designed the hiring and selection process','Drew from our long-tracked candidate pool','Structured training and desk rotations','Evaluated performance under real conditions'].map((t,i) => (
+                <div key={i} style={{ display:'flex', alignItems:'baseline', gap:12, padding:'10px 0', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color:'var(--red)', fontWeight:700, flexShrink:0 }}>→</span>
+                  <span style={{ fontSize:15, color:'rgba(255,255,255,0.65)', lineHeight:1.6 }}>{t}</span>
                 </div>
+              ))}
+              <div style={{ marginTop:28, background:'rgba(229,57,53,0.15)', borderLeft:'3px solid var(--red)', padding:'18px 22px', borderRadius:'0 3px 3px 0' }}>
+                <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--red)', marginBottom:6 }}>Outcome</div>
+                <div style={{ fontSize:15, color:'rgba(255,255,255,0.65)', lineHeight:1.7 }}>High-performing hires from day one. Reduced hiring risk. A repeatable system.</div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <CtaBanner
-          title="Build your next generation of talent properly."
-          ctaLabel="Speak to Us"
-          ctaHref="/contact"
-          tone="ink"
-        />
-      </main>
-      <Footer />
+      <Divider/>
+
+      {/* CLOSING CTA */}
+      <section style={{ background:'#05111D' }}>
+        <div className="section tight" style={{ textAlign:'center' }}>
+          <div style={{ maxWidth:680, margin:'0 auto' }}>
+            <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(32px,5vw,60px)', fontWeight:700, color:'#fff', lineHeight:1.06, letterSpacing:'-0.025em', marginBottom:20 }}>Build your next generation of talent properly.</h2>
+            <p style={{ fontSize:17, fontWeight:300, color:'rgba(255,255,255,0.5)', lineHeight:1.8, marginBottom:36 }}>We review every submission personally. If there's a fit — we'll be in touch.</p>
+            <Link href="/contact" className="btn-red">Speak to Us</Link>
+          </div>
+        </div>
+      </section>
+
+      <Divider/>
+
+      {/* SPEAK TO US */}
+      <section style={{ background:'var(--navy-d)' }}>
+        <div className="section tight">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+            <div>
+              <div className="eyebrow">Speak to Us</div>
+              <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(28px,4vw,44px)', fontWeight:700, color:'#fff', lineHeight:1.1, letterSpacing:'-0.025em', marginBottom:14 }}>Start the conversation.</h2>
+              <p style={{ fontSize:16, fontWeight:300, color:'rgba(255,255,255,0.4)', lineHeight:1.8, marginTop:12 }}>We review every submission personally.</p>
+            </div>
+            <ContactForm/>
+          </div>
+        </div>
+      </section>
+
+      <Footer/>
     </>
-  );
+  )
 }

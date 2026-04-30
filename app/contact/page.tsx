@@ -1,58 +1,36 @@
-import type { Metadata } from 'next';
-import { Nav } from '@/components/Nav';
-import { Footer } from '@/components/Footer';
-import { ContactForm } from '@/components/ContactForm';
-import { SITE_CONFIG } from '@/lib/site-config';
+import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
+import ContactForm from '@/components/ContactForm'
 
 export const metadata: Metadata = {
-  title: 'Speak to Us — Bridge Global Talent Partners',
-  description:
-    'Talk to Bridge about hiring senior leadership in Africa, or running a graduate trainee program for your company.',
-  alternates: { canonical: '/contact' },
-};
+  title: 'Speak to Us',
+  description: 'Whether you\'re hiring or ready to be found — get in touch with Bridge Talent Partners.',
+}
 
-export default function ContactPage() {
+export default function Contact() {
   return (
     <>
-      <Nav />
-      <main id="main" className="bg-section-cream">
-        <section className="container-wide section-y" aria-labelledby="contact-heading">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-            <div className="lg:col-span-5 lg:sticky lg:top-28">
-              <p className="eyebrow eyebrow-red mb-5">Speak to Us</p>
-              <h1
-                id="contact-heading"
-                className="font-heading font-bold text-navy leading-[1.05] tracking-[-0.025em] mb-6"
-                style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}
-              >
-                Tell us who you are.
+      <section style={{ background:'var(--navy-d)', minHeight:'80vh' }}>
+        <div className="section">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+            <div>
+              <div className="eyebrow">Speak to Us</div>
+              <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(28px,4vw,48px)', fontWeight:700, color:'#fff', lineHeight:1.08, letterSpacing:'-0.025em', marginBottom:14 }}>
+                Whether you're hiring<br/>or ready to be found.
               </h1>
-              <p className="text-navy/75 text-lg md:text-xl leading-[1.65] mb-10 max-w-[42ch]">
-                We work with a small number of companies on a retained basis. Tell us what you&apos;re
-                trying to build and we&apos;ll be in touch within 48 hours.
+              <p style={{ fontSize:16, fontWeight:300, color:'rgba(255,255,255,0.4)', lineHeight:1.8, marginTop:12 }}>
+                We review every submission personally. If there's a fit — we'll be in touch.
               </p>
-              <div className="space-y-3 pt-6 border-t border-navy/10">
-                <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
-                  Or email us directly
-                </p>
-                <a
-                  href={`mailto:${SITE_CONFIG.contact.email}`}
-                  className="font-heading text-xl md:text-2xl font-bold text-navy hover:text-red transition-colors"
-                >
-                  {SITE_CONFIG.contact.email}
-                </a>
+              <div style={{ marginTop:40 }}>
+                <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginBottom:8 }}>Or email us directly</div>
+                <a href="mailto:hello@bridgegtp.com" style={{ fontFamily:"'Montserrat',sans-serif", fontSize:18, fontWeight:700, color:'#fff' }}>hello@bridgegtp.com</a>
               </div>
             </div>
-
-            <div className="lg:col-span-7">
-              <div className="bg-navy text-white rounded-md p-8 md:p-12 shadow-elev-3">
-                <ContactForm />
-              </div>
-            </div>
+            <ContactForm/>
           </div>
-        </section>
-      </main>
-      <Footer />
+        </div>
+      </section>
+      <Footer/>
     </>
-  );
+  )
 }
