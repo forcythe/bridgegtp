@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Nav from '@/components/Nav'
+import RevealObserver from '@/components/animations/RevealObserver'
 
 export const metadata: Metadata = {
   title: { default: 'Bridge Talent Partners', template: '%s | Bridge Talent Partners' },
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Nav />
         {children}
+        <RevealObserver />
       </body>
     </html>
   )

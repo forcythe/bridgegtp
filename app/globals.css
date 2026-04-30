@@ -217,3 +217,118 @@ body { animation: pageFadeIn 0.6s ease-out forwards; }
   .divider { animation: none; }
   .hero-gradient-shift { animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   CSS-ONLY SCROLL ANIMATIONS (IntersectionObserver via CSS)
+   No JS required — uses @keyframes + animation-play-state
+═══════════════════════════════════════════════════════════ */
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Elements with these classes animate when .in-view is added by JS */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+}
+.reveal.in-view {
+  animation: fadeSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+}
+.reveal-left.in-view {
+  animation: fadeSlideLeft 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(32px);
+}
+.reveal-right.in-view {
+  animation: fadeSlideRight 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(1.05);
+}
+.reveal-scale.in-view {
+  animation: scaleIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s !important; }
+.delay-2 { animation-delay: 0.2s !important; }
+.delay-3 { animation-delay: 0.3s !important; }
+.delay-4 { animation-delay: 0.4s !important; }
+
+/* Hero headline word animation */
+@keyframes heroWord {
+  from { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: heroWord 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-word:nth-child(1) { animation-delay: 0.2s; }
+.hero-word:nth-child(2) { animation-delay: 0.35s; }
+.hero-word:nth-child(3) { animation-delay: 0.5s; }
+
+/* Hero sub + CTA fade in */
+.hero-sub-anim {
+  opacity: 0;
+  animation: fadeSlideUp 0.55s cubic-bezier(0.22,1,0.36,1) 0.65s forwards;
+}
+.hero-cta-anim {
+  opacity: 0;
+  animation: fadeSlideUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.8s forwards;
+}
+.hero-logos-anim {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out 1.0s forwards;
+}
+
+/* Eyebrow line draw */
+@keyframes lineGrow {
+  from { width: 0; }
+  to   { width: 36px; }
+}
+.hero-eyebrow-line {
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #C9A044;
+  flex-shrink: 0;
+  animation: lineGrow 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right, .reveal-scale,
+  .hero-word, .hero-sub-anim, .hero-cta-anim, .hero-logos-anim {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+  .hero-eyebrow-line { width: 36px; animation: none; }
+}
