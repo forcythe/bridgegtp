@@ -1,2 +1,6 @@
 import { redirect } from 'next/navigation'
-export default function About() { redirect('/') }
+
+// About content lives on the homepage
+export default function About() {
+  redirect('/')
+}
