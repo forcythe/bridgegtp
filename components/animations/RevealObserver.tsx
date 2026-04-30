@@ -3,29 +3,25 @@ import { useEffect } from 'react'
 
 export default function RevealObserver() {
   useEffect(() => {
-    // Step 1: tell CSS that JS is running — enables the hidden state on reveal elements
-    document.body.classList.add('js-ready')
+    // Mark body so CSS knows JS is running — this enables the hidden state
+    document.body.classList.add('js-loaded')
 
-    // Step 2: observe all reveal elements
-    const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale')
+    const els = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale')
     if (!els.length) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('in-view')
-            observer.unobserve(e.target)
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -32px 0px' }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible')
+          io.unobserve(e.target)
+        }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
     )
 
-    // Tiny delay so elements already in viewport on load still animate in
-    setTimeout(() => els.forEach(el => observer.observe(el)), 60)
-
-    return () => observer.disconnect()
+    // Small timeout ensures elements that are already in viewport also animate
+    const t = setTimeout(() => els.forEach(el => io.observe(el)), 80)
+    return () => { clearTimeout(t); io.disconnect() }
   }, [])
 
   return null

@@ -6,44 +6,76 @@ import Divider from '@/components/Divider'
 import ContactForm from '@/components/ContactForm'
 import ParticleField from '@/components/animations/ParticleField'
 
+// Client logos — duplicated so ticker loops seamlessly
+const CLIENTS = [
+  { src:'starks', alt:'Starks Associates', h:36, filter:'brightness(0) invert(1)' },
+  { src:'doss', alt:'Doss Law', h:32, filter:'brightness(0) invert(1)' },
+  { src:'alexander', alt:'Alexander Tax Law', h:32, filter:'brightness(0) invert(1)' },
+  { src:'rdl', alt:'RDL Consulting', h:40, filter:'brightness(0) invert(1)' },
+]
+
+function LogoTicker() {
+  // Duplicate the list so the seamless loop works
+  const all = [...CLIENTS, ...CLIENTS]
+  return (
+    <div style={{ textAlign:'center', padding:'40px 0 0', borderTop:'1px solid rgba(255,255,255,0.1)' }}>
+      <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:10, fontWeight:600, letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginBottom:24 }}>
+        Trusted by
+      </div>
+      <div className="ticker-wrap" style={{ width:'100%' }}>
+        <div className="ticker-track">
+          {all.map((c,i) => (
+            <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <Image
+                src={`/clients/${c.src === 'starks' ? 'starks.svg' : c.src === 'doss' ? 'doss-law.png' : c.src === 'alexander' ? 'alexander-tax-law.webp' : 'rdl-consulting.webp'}`}
+                alt={c.alt} width={180} height={60}
+                style={{ height:c.h, width:'auto', objectFit:'contain', filter:c.filter, opacity:0.7 }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function HomeClient() {
   return (
     <>
       {/* ── HERO */}
       <section style={{ position:'relative', minHeight:'92vh', display:'flex', flexDirection:'column', justifyContent:'flex-end', overflow:'hidden' }}>
-        <Image src="/photos/session-1.jpg" alt="Bridge session" fill style={{ objectFit:'cover', objectPosition:'center 35%' }} priority />
+        <Image src="/photos/session-1.jpg" alt="Bridge session" fill style={{ objectFit:'cover', objectPosition:'center 35%' }} priority/>
         <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(4,18,32,0.97) 0%,rgba(7,30,51,0.87) 38%,rgba(7,30,51,0.45) 100%)' }}/>
-        <ParticleField />
+        <ParticleField/>
         <div style={{ position:'relative', zIndex:2, maxWidth:1200, margin:'0 auto', padding:'0 48px 80px', width:'100%' }}>
+
           {/* Eyebrow */}
           <div style={{ fontFamily:"'Montserrat',sans-serif", fontSize:11, fontWeight:700, letterSpacing:'0.22em', textTransform:'uppercase', color:'#C9A044', display:'flex', alignItems:'center', gap:12, marginBottom:22 }}>
             <span className="hero-eyebrow-line"/>
             Africa &amp; Emerging Markets · Executive Search · Graduate Trainee Program
           </div>
-          {/* Headline — CSS word animation */}
+
+          {/* H1 — word by word */}
           <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontSize:'clamp(60px,9vw,112px)', fontWeight:700, color:'#fff', lineHeight:0.94, letterSpacing:'-0.035em', marginBottom:22, display:'flex', flexWrap:'wrap', gap:'0.25em' }}>
             <span className="hero-word">Hire</span>
             <span className="hero-word">Proven</span>
             <span className="hero-word">Talent.</span>
           </h1>
-          {/* Sub */}
+
           <p className="hero-sub-anim" style={{ fontSize:20, fontWeight:300, color:'rgba(255,255,255,0.6)', lineHeight:1.7, maxWidth:500, marginBottom:38 }}>
             We build and deploy African leaders who perform anywhere.
           </p>
-          {/* CTAs */}
+
           <div className="hero-cta-anim" style={{ display:'flex', gap:14, marginBottom:52 }}>
             <Link href="/contact" className="btn-red">Speak to Us</Link>
             <Link href="/graduate-trainee" className="btn-outline-w">Join the GT Program</Link>
           </div>
-          {/* Client logos */}
-          <div className="hero-logos-anim" style={{ display:'flex', alignItems:'center', paddingTop:32, borderTop:'1px solid rgba(255,255,255,0.1)' }}>
-            <span style={{ fontFamily:"'Montserrat',sans-serif", fontSize:10, fontWeight:600, letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginRight:36, flexShrink:0 }}>Trusted by</span>
-            <div style={{ display:'flex', gap:36, alignItems:'center', flexWrap:'wrap' }}>
-              {['/clients/alexander-tax-law.webp','/clients/doss-law.png','/clients/rdl-consulting.webp'].map((src,i) => (
-                <Image key={i} src={src} alt="" width={120} height={28} className="client-logo" style={{ height:28, width:'auto', objectFit:'contain', filter:'brightness(0) invert(1)', opacity:0.55 }}/>
-              ))}
-            </div>
+
+          {/* Logo ticker */}
+          <div className="hero-logos-anim">
+            <LogoTicker/>
           </div>
+
           {/* Scroll hint */}
           <div className="scroll-hint" style={{ position:'absolute', bottom:-48, left:'50%', transform:'translateX(-50%)' }}>
             <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
@@ -127,10 +159,10 @@ export default function HomeClient() {
             </div>
             <div className="reveal-scale">
               <a href="https://www.youtube.com/@BridgeAfrica-q4h" target="_blank" rel="noopener"
-                style={{ display:'block', position:'relative', width:'100%', aspectRatio:'16/9', borderRadius:6, overflow:'hidden', cursor:'pointer' }}>
+                style={{ display:'block', position:'relative', width:'100%', aspectRatio:'16/9', borderRadius:6, overflow:'hidden' }}>
                 <Image src="/photos/session-3.jpg" alt="Bridge Africa YouTube" fill style={{ objectFit:'cover' }}/>
                 <div style={{ position:'absolute', inset:0, background:'rgba(4,18,32,0.62)' }}/>
-                <div className="yt-play-btn" style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-52%)', width:72, height:72, background:'var(--red)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 24px rgba(229,57,53,0.5)', transition:'transform 300ms ease-out, box-shadow 300ms ease-out' }}>
+                <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-52%)', width:72, height:72, background:'var(--red)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 24px rgba(229,57,53,0.5)', transition:'transform 300ms,box-shadow 300ms' }}>
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
                 </div>
                 <div style={{ position:'absolute', bottom:16, left:20, right:20, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
