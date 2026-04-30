@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Footer from '@/components/Footer'
 import Divider from '@/components/Divider'
 import ContactForm from '@/components/ContactForm'
@@ -10,30 +11,31 @@ import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { slideLeft, slideRight, slideUp, staggerContainer, imageReveal, EASE_OUT } from '@/lib/animationVariants'
 
 export default function GraduateTrainee() {
-  const reduced = useReducedMotion()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
   return (
     <>
       {/* HERO */}
       <section style={{ position: 'relative', minHeight: '76vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden' }}>
-        <motion.div style={{ position: 'absolute', inset: 0 }} initial={reduced ? false : { scale: 1.06, opacity: 0.8 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.2, ease: EASE_OUT }}>
+        <motion.div style={{ position: 'absolute', inset: 0 }} initial={mounted ? { scale: 1.06, opacity: 0.8 } : false} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.2, ease: EASE_OUT }}>
           <Image src="/photos/session-3.jpg" alt="" fill style={{ objectFit: 'cover', objectPosition: 'center 40%' }} priority />
         </motion.div>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(4,18,32,0.97) 0%,rgba(7,30,51,0.88) 35%,rgba(7,30,51,0.5) 100%)' }} />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 1200, margin: '0 auto', padding: '0 48px 80px', width: '100%' }}>
-          <motion.div initial={reduced ? false : { opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+          <motion.div initial={mounted ? { opacity: 0, x: -20 } : false} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
             style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C9A044', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
-            <motion.span initial={reduced ? false : { width: 0 }} animate={{ width: 36 }} transition={{ duration: 0.6, delay: 0.3 }} style={{ display: 'block', height: 2, background: '#C9A044', flexShrink: 0 }} />
+            <motion.span initial={mounted ? { width: 0 } : false} animate={{ width: 36 }} transition={{ duration: 0.6, delay: 0.3 }} style={{ display: 'block', height: 2, background: '#C9A044', flexShrink: 0 }} />
             Graduate Trainee Program
           </motion.div>
-          <motion.h1 initial={reduced ? false : { opacity: 0, y: 40, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.65, delay: 0.3, ease: EASE_OUT }}
+          <motion.h1 initial={mounted ? { opacity: 0, y: 40, filter: 'blur(6px)' } : false} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.65, delay: 0.3, ease: EASE_OUT }}
             style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 'clamp(44px,7vw,88px)', fontWeight: 700, color: '#fff', lineHeight: 0.97, letterSpacing: '-0.03em', marginBottom: 20 }}>
             For Companies<br />That Want to Win.
           </motion.h1>
-          <motion.p initial={reduced ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}
+          <motion.p initial={mounted ? { opacity: 0, y: 20 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}
             style={{ fontSize: 19, fontWeight: 300, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, maxWidth: 500, marginBottom: 36 }}>
             We run your graduate program — properly.
           </motion.p>
-          <motion.div initial={reduced ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.65 }}
+          <motion.div initial={mounted ? { opacity: 0, y: 16 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.65 }}
             whileHover={reduced ? undefined : { scale: 1.03 }} whileTap={reduced ? undefined : { scale: 0.97 }}>
             <Link href="/contact" className="btn-red">Speak to Us</Link>
           </motion.div>

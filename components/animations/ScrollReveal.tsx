@@ -1,7 +1,6 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
 import type { Variants } from 'framer-motion'
 import { slideUp } from '@/lib/animationVariants'
 
@@ -11,7 +10,6 @@ interface Props {
   className?: string
   style?: React.CSSProperties
   delay?: number
-  once?: boolean
   threshold?: number
 }
 
@@ -21,16 +19,26 @@ export default function ScrollReveal({
   className,
   style,
   delay = 0,
-  once = true,
-  threshold = 0.15,
+  threshold = 0.12,
 }: Props) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once, amount: threshold })
-  const reduced = useReducedMotion()
+  const inView = useInView(ref, { once: true, amount: threshold })
+  const [mounted, setMounted] = useState(false)
+  const [reduced, setReduced] = useState(false)
 
-  const finalVariants: Variants = reduced
-    ? { hidden: {}, visible: {} }
-    : variants
+  useEffect(() => {
+    setMounted(true)
+    setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
+
+  // Before JS hydrates, or if reduced motion: render children fully visible, no animation
+  if (!mounted || reduced) {
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -39,7 +47,7 @@ export default function ScrollReveal({
       style={style}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
-      variants={finalVariants}
+      variants={variants}
       transition={delay ? { delay } : undefined}
     >
       {children}
